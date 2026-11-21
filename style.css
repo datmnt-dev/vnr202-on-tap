@@ -19,13 +19,14 @@
 body { margin: 0; min-height: 100vh; }
 button { font: inherit; color: inherit; cursor: pointer; }
 button:disabled { cursor: default; }
-button:focus-visible, summary:focus-visible { outline: 3px solid #3478b0; outline-offset: 3px; }
+button:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid #3478b0; outline-offset: 3px; }
 .shell { width: min(1136px, calc(100% - 48px)); margin: auto; }
 .site-header { background: var(--deep); color: #fffefa; }
 .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; min-height: 76px; }
-.brand { display: flex; gap: 11px; align-items: center; white-space: nowrap; }
+.brand { display: flex; gap: 11px; align-items: center; }
 .brand-mark {
   display: grid; place-items: center; width: 38px; height: 38px;
+  flex-shrink: 0;
   color: var(--deep); background: var(--gold); border-radius: 11px; font-size: 24px;
 }
 .brand strong, .brand div span { display: block; }
@@ -41,6 +42,14 @@ button:focus-visible, summary:focus-visible { outline: 3px solid #3478b0; outlin
 #review-count { display: inline-block; min-width: 1.6em; margin-left: 4px; color: #362d14; background: var(--gold); border-radius: 999px; text-align: center; font-size: 12px; padding: 1px 5px; }
 
 .intro { padding: 34px 0 24px; }
+.courses { display: flex; gap: 6px; margin-bottom: 12px; }
+.courses a {
+  display: inline-flex; align-items: center; min-height: 36px; padding: 5px 12px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--paper);
+  color: var(--green); font-size: 14px; font-weight: 700; text-decoration: none;
+}
+.courses a:hover { background: var(--mint); }
+.courses a[aria-current="page"] { border-color: var(--green); background: var(--green); color: white; }
 .intro h1 { margin: 0; font-weight: 750; font-size: clamp(32px, 5vw, 52px); letter-spacing: -.045em; color: var(--deep); }
 .intro p { margin: 8px 0 0; color: var(--muted); line-height: 1.5; }
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(245px, 306px); gap: 22px; align-items: start; }

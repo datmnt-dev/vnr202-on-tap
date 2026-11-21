@@ -1,11 +1,23 @@
-/* global questions */
+/* global questions, mlnQuestions */
 "use strict";
 
 const $ = (selector, root = document) => root.querySelector(selector);
-const allIds = questions.map((_, id) => id);
+const courses = {
+  vnr202: { code: "VNR202", name: "Lịch sử Đảng", source: "VNR.docx", bank: questions, storageKey: "vnr202.on-tap.v1" },
+  mln: { code: "MLN", name: "Chủ nghĩa xã hội khoa học", source: "MLN.docx", bank: mlnQuestions, storageKey: "mln.on-tap.v1" },
+};
+const courseId = new URLSearchParams(location.search).get("mon") === "mln" ? "mln" : "vnr202";
+const { code, name, source, bank, storageKey } = courses[courseId];
+const allIds = bank.map((_, id) => id);
 const letters = "ABCDEFGH";
-const storageKey = "vnr202.on-tap.v1";
 const emptyState = { mode: "study", studyId: 0, reviewId: null, answers: {}, mastered: {} };
+
+document.title = `Ôn tập ${code} · ${name}`;
+$("#course-code").textContent = code;
+$("#course-name").textContent = name;
+$("#question-source").textContent = `Nguồn câu hỏi và đáp án · ${source}`;
+$(".courses [aria-current]").removeAttribute("aria-current");
+$(`#course-${courseId}`).setAttribute("aria-current", "page");
 let state = structuredClone(emptyState);
 try {
   const saved = localStorage.getItem(storageKey);
@@ -39,12 +51,12 @@ function save() {
 }
 
 function isCorrect(id, response) {
-  const expected = questions[id].correct;
+  const expected = bank[id].correct;
   return response.length === expected.length && expected.every(answer => response.includes(answer));
 }
 
 function wrongIds() {
-  return allIds.filter(id => state.answers[id] && !questions[id].ungraded && !isCorrect(id, state.answers[id]));
+  return allIds.filter(id => state.answers[id] && !bank[id].ungraded && !isCorrect(id, state.answers[id]));
 }
 
 function pendingIds() {
@@ -88,7 +100,7 @@ function navigate(id, { focus = true, summary = false } = {}) {
 
 function statusFor(id) {
   if (!state.answers[id]) return ["", "Chưa trả lời"];
-  if (questions[id].ungraded) return ["neutral", "Đã làm"];
+  if (bank[id].ungraded) return ["neutral", "Đã làm"];
   if (isCorrect(id, state.answers[id])) return ["done", "Đúng"];
   if (state.mastered[id]) return ["cleared", "Đã ôn"];
   return ["missed", "Sai"];
@@ -176,7 +188,7 @@ function submit(response) {
 
 function choose(index) {
   const id = activeId();
-  const question = questions[id];
+  const question = bank[id];
   if (!question?.options[index] || (state.mode === "study" ? state.answers[id] : reviewAttempt)) return;
   if (question.correct.length === 1) {
     submit([index]);
@@ -204,7 +216,7 @@ function next() {
 
 function updateCard() {
   const id = activeId();
-  const question = questions[id];
+  const question = bank[id];
   const reviewing = state.mode === "review";
   const response = reviewing ? reviewAttempt : state.answers[id];
   const multi = question.correct.length > 1;
@@ -302,7 +314,7 @@ function render() {
   $("#page-title").textContent = reviewing ? "Ôn lại câu sai" : "Ôn tập trắc nghiệm";
   $("#page-description").textContent = reviewing
     ? "Câu trả lời sai sẽ xuất hiện lại cho đến khi bạn làm đúng."
-    : `Học liền mạch ${questions.length} câu hỏi theo thứ tự tài liệu.`;
+    : `Học liền mạch ${bank.length} câu hỏi theo thứ tự tài liệu.`;
   renderSidebar();
 
   const id = activeId();
@@ -310,10 +322,10 @@ function render() {
     renderSummary();
     return;
   }
-  const question = questions[id];
+  const question = bank[id];
   const multi = question.correct.length > 1;
   card = $("#question-template").content.firstElementChild.cloneNode(true);
-  $(".question-number", card).textContent = `Câu ${id + 1} / ${questions.length}`;
+  $(".question-number", card).textContent = `Câu ${id + 1} / ${bank.length}`;
   $(".question-type", card).textContent = multi ? `Chọn ${question.correct.length} đáp án` : "Chọn 1 đáp án";
   $(".prompt", card).textContent = question.prompt;
   const options = $(".options", card);

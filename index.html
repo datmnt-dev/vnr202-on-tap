@@ -7,12 +7,13 @@
   <title>Ôn tập VNR202 · Lịch sử Đảng</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="questions.js"></script>
+  <script defer src="mln-questions.js"></script>
   <script defer src="quiz.js"></script>
 </head>
 <body>
   <header class="site-header">
     <div class="shell header-inner">
-      <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><div><strong>VNR202</strong><span>Lịch sử Đảng</span></div></div>
+      <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><div><strong id="course-code">VNR202</strong><span id="course-name">Lịch sử Đảng</span></div></div>
       <nav class="modes" aria-label="Chế độ học">
         <button id="study-mode" type="button" aria-pressed="true">Học toàn bộ</button>
         <button id="review-mode" type="button" aria-pressed="false">Ôn câu sai <span id="review-count">0</span></button>
@@ -22,6 +23,10 @@
 
   <main class="shell">
     <div class="intro">
+      <nav class="courses" aria-label="Môn học">
+        <a id="course-vnr202" href="?" aria-current="page">VNR202</a>
+        <a id="course-mln" href="?mon=mln">MLN</a>
+      </nav>
       <h1 id="page-title">Ôn tập trắc nghiệm</h1>
       <p id="page-description"></p>
     </div>
@@ -53,7 +58,7 @@
         <p id="save-status" class="save-status" role="status">Tiến độ được lưu trên trình duyệt này.</p>
       </aside>
     </div>
-    <footer class="footer"><span>Nguồn câu hỏi và đáp án · VNR.docx</span><span class="keyboard-help"><kbd>1</kbd>–<kbd>5</kbd> chọn đáp án <span>·</span> <kbd>Enter</kbd> tiếp tục</span></footer>
+    <footer class="footer"><span id="question-source">Nguồn câu hỏi và đáp án · VNR.docx</span><span class="keyboard-help"><kbd>1</kbd>–<kbd>5</kbd> chọn đáp án <span>·</span> <kbd>Enter</kbd> tiếp tục</span></footer>
   </main>
 
   <template id="question-template">
